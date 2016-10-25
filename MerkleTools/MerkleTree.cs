@@ -15,7 +15,7 @@ namespace MerkleTools
 		private MerkleNodeBase _root;
 		private bool _recalculate;
 
-		public byte[] MerkleRootHash => Root.Hash;
+		public byte[] MerkleRootHash => Root?.Hash;
 
 		internal MerkleNodeBase Root
 		{
@@ -77,6 +77,19 @@ namespace MerkleTools
 		public Proof GetProof(int index)
 		{
 			return GetProof(_leave[index]);
+		}
+
+		public Proof GetProof(byte[] hash)
+		{
+			try
+			{
+				var leaf = _leave.Single(x => x.Hash.SequenceEqual(hash));
+				return GetProof(leaf);
+			}
+			catch (InvalidOperationException e)
+			{
+				throw new InvalidOperationException("There is not single hash matching", e);
+			}
 		}
 
 		public bool ValidateProof(Proof proof, byte[] hash)
@@ -151,6 +164,11 @@ namespace MerkleTools
 		{
 			return new Receipt(this);
 		}
+
+		public string ToJson()
+		{
+			return $"[{string.Join(",", this.Select(x=>x.ToJson()))}]";
+		}
 	}
 
 	public class Receipt
@@ -173,9 +191,14 @@ namespace MerkleTools
 			_anchors = new List<Anchor>();
 		}
 
-		public void AddAnchor(Anchor anchor)
+		public void AddBitcoinAnchor(string sourceId)
 		{
-			_anchors.Add(anchor);
+			AddAnchor("BTCOpReturn", sourceId);
+		}
+
+		public void AddAnchor(string type, string sourceId)
+		{
+			_anchors.Add(new Anchor(type, sourceId));
 		}
 
 		public string ToJson()
@@ -210,7 +233,7 @@ namespace MerkleTools
 
 		public string ToJson()
 		{
-			return $"{{ 'type': '{AnchorType}', 'sourceId': '{SourceId}' }}";
+			return $"{{ \"type\": \"{AnchorType}\", \"sourceId\": \"{SourceId}\" }}";
 		}
 	}
 
