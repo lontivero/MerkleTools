@@ -8,6 +8,6 @@
 		}
 
 		public override byte[] Hash { get; }
-		public override int Level => 1;
+		public override int Level => 0;
 	}
 }

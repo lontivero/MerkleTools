@@ -56,8 +56,7 @@ namespace MerkleTools
 
 		internal Proof GetProof(MerkleLeaf leaf)
 		{
-			var hashAlgorithmName = _hashAlgorithm.GetType().DeclaringType.Name;
-			var proof = new Proof(leaf.Hash, Root.Hash, hashAlgorithmName);
+			var proof = new Proof(leaf.Hash, Root.Hash, _hashAlgorithm);
 			var node = (MerkleNodeBase)leaf;
 			while (node.Parent !=null)
 			{
@@ -110,16 +109,16 @@ namespace MerkleTools
 
 	public class Proof : IEnumerable<ProofItem>
 	{
-		public string AlgorithmName { get; }
+		public HashAlgorithm HashAlgorithm { get; }
 		public byte[] Target { get; }
 		public byte[] MerkleRoot { get; }
 		private readonly List<ProofItem> _proofItems = new List<ProofItem>();
 
 		public ProofItem this[int i] => _proofItems[i];
 
-		public Proof(byte[] target, byte[] merkleRoot, string hashAlgorithmName)
+		public Proof(byte[] target, byte[] merkleRoot, HashAlgorithm hashAlgorithm)
 		{
-			AlgorithmName = hashAlgorithmName;
+			HashAlgorithm = hashAlgorithm;
 			Target = target;
 			MerkleRoot = merkleRoot;
 		}
@@ -131,6 +130,11 @@ namespace MerkleTools
 		public void AddRight(byte[] hash)
 		{
 			_proofItems.Add(new ProofItem(Branch.Rigth, hash));
+		}
+
+		public bool Validate()
+		{
+			return Validate(Target, MerkleRoot, HashAlgorithm);
 		}
 
 		public bool Validate(byte[] hash, byte[] root, HashAlgorithm hashAlgorithm)
@@ -189,10 +193,11 @@ namespace MerkleTools
 		public Receipt(Proof proof)
 		{
 			_proof = proof;
+			Context = "https://w3id.org/chainpoint/v2";
 			TargetHash = proof.Target;
 			MerkleRoot = proof.MerkleRoot;
-			Type = $"Chainpoint{proof.AlgorithmName}v2";
-			Context = "https://w3id.org/chainpoint/v2";
+			var hashAlgorithmName = proof.HashAlgorithm.GetType().DeclaringType.Name;
+			Type = $"Chainpoint{hashAlgorithmName}v2";
 			_anchors = new List<Anchor>();
 		}
 
