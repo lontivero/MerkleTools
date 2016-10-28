@@ -124,23 +124,24 @@ namespace MerkleTools.Tests
 		}
 
 		[Fact]
-		public void xxx()
+		public void Example()
 		{
 			var tree = new MerkleTree();
 
-			tree.AddLeave(new[]{
-				HexEncoder.Decode("e1566f09e0deea437826514431be6e4bdb4fe10aa54d75aecf0b4cdc1bc4320c"),
-				HexEncoder.Decode("2f7f9092b2d6c5c17cfe2bcf33fc38a41f2e4d4485b198c2b1074bba067e7168"),
-				HexEncoder.Decode("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"),
-				HexEncoder.Decode("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
-			});
+			tree.AddLeaf(Encoding.ASCII.GetBytes("tierion"), true);
+			tree.AddLeave(new[] {Encoding.ASCII.GetBytes("bitcoin"), Encoding.ASCII.GetBytes("blockchain")}, true);
+
+			//tree.AddLeave(new[]{
+			//	HexEncoder.Decode("a292780cc748697cb499fdcc8cb89d835609f11e502281dfe3f6690b1cc23dcb"),
+			//	HexEncoder.Decode("cb4990b9a8936bbc137ddeb6dcab4620897b099a450ecdc5f3e86ef4b3a7135c"),
+			//});
 
 			var root = HexEncoder.Encode(tree.MerkleRootHash);
 			Console.WriteLine(root);
 
 			// 6a9a3c86d47f1fe12648c86368ecd9723ff12e3fc34f6ae219d4d9d3e0d60667
 
-			var proof = tree.GetProof(1);
+			var proof = tree.GetProof(0);
 			Console.WriteLine(proof.ToJson());
 
 			/*

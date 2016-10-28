@@ -94,24 +94,7 @@ namespace MerkleTools
 
 		public bool ValidateProof(Proof proof, byte[] hash)
 		{
-			var proofHash = hash;
-			foreach (var x in proof)
-			{
-				if (x.Branch == Branch.Left)
-				{
-					proofHash = Melt(x.Hash, proofHash, _hashAlgorithm);
-				}
-				else if (x.Branch == Branch.Rigth)
-				{
-					proofHash = Melt(proofHash, x.Hash, _hashAlgorithm);
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			return proofHash.SequenceEqual(Root.Hash);
+			return proof.Validate(hash, MerkleRootHash, _hashAlgorithm);
 		}
 
 		public int Levels => Root.Level;
@@ -148,6 +131,28 @@ namespace MerkleTools
 		public void AddRight(byte[] hash)
 		{
 			_proofItems.Add(new ProofItem(Branch.Rigth, hash));
+		}
+
+		public bool Validate(byte[] hash, byte[] root, HashAlgorithm hashAlgorithm)
+		{
+			var proofHash = hash;
+			foreach (var x in this)
+			{
+				if (x.Branch == Branch.Left)
+				{
+					proofHash = MerkleTree.Melt(x.Hash, proofHash, hashAlgorithm);
+				}
+				else if (x.Branch == Branch.Rigth)
+				{
+					proofHash = MerkleTree.Melt(proofHash, x.Hash, hashAlgorithm);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return proofHash.SequenceEqual(root);
 		}
 
 		public IEnumerator<ProofItem> GetEnumerator()

@@ -1,6 +1,6 @@
 {
   "name": "MerkleTools",
-  "version": "1.0.0-*",
+  "version": "1.0.1",
   "authors": [ "Lucas Ontivero" ],
   "title": "MerkleTools for .NET",
   "description": "MerkleTools is a library for creating and validating Merkle trees and receipts in a format consistent with the chainpoint v2 standard.",
@@ -8,7 +8,7 @@
   "packOptions": {
     "summary": "Create and validate Merkle trees and receipts in a format consistent with the chainpoint v2 standard",
     "tags": [ "Merkle", "Tree", "Proof", "Chainpoint", "Receipt", "Timestamp" ],
-    "owners": [ "Lucas Ontivero", "Matias Iacono", "O3one soft" ],
+    "owners": [ "O3one soft" ],
     "releaseNotes": "First Version",
     "iconUrl": "https://raw.githubusercontent.com/O3-one/MerkleTools/master/logo64.jpg",
     "projectUrl": "https://github.com/O3-one/MerkleTools",
