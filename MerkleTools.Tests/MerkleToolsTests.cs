@@ -33,7 +33,7 @@ namespace MerkleTools.Tests
 			var mt = new MerkleTree();
 			mt.AddLeaf(sha256("test1"));
 			mt.AddLeaf(sha256("test2"));
-			Assert.Equal<string>("587b1fe3afa386ce7cf9e99cf6f3b7f6a78a3c1ca6a549bbd467c992e482dc56", HexEncoder.Encode(mt.MerkleRootHash));
+			Assert.Equal("587b1fe3afa386ce7cf9e99cf6f3b7f6a78a3c1ca6a549bbd467c992e482dc56", HexEncoder.Encode(mt.MerkleRootHash));
 		}
 
 		[Fact]
