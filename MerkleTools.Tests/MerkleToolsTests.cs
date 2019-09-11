@@ -68,6 +68,26 @@ namespace MerkleTools.Tests
 		}
 
 		[Fact]
+		public void TenThousandItems()
+		{
+			var mt = new MerkleTree();
+			foreach (var i in Enumerable.Range(0, 10_000))
+			{
+				mt.AddLeaf(Encoding.ASCII.GetBytes($"test{i}"), true);
+			}
+
+			var startTime = DateTime.UtcNow;
+			foreach (var i in Enumerable.Range(0, 10_000))
+			{
+				mt.GetProof(i);
+			}
+			var endTime = DateTime.UtcNow;
+			var ms = (endTime - startTime).TotalMilliseconds;
+
+			Assert.InRange(ms, 0, 6_000);
+		}
+
+		[Fact]
 		public void TenItemsx()
 		{
 			var mt = new MerkleTree();
